@@ -194,29 +194,3 @@ final이나 private으로 선언하게 되면 컴파일 타임에 어떤 함수�
 ![Untitled](Images/Untitled%2028.png)
 
 ![Untitled](Images/Untitled%2029.png)
-
-## Protocol Types
-
-![Untitled](Images/Untitled%2030.png)
-
-- Point, Line이 class 가 아닌 struct로 작성된 경우, 클래스처럼 상속 기반 다형성이 아니므로 vtable이 필요 없다.
-
-그래서 Protocol Witness Table(PWT)을 사용함.
-
-![Untitled](Images/Untitled%2031.png)
-
-![Untitled](Images/Untitled%2032.png)
-
-- drawables의 element에 접근하여 draw()를 호출하면 해당 프로토콜의 PWT를 타고 실제 구현된 내용까지 도달한다.
-
-### 값 타입 배열
-
-struct는 값 타입이기 때문에 배열에 레퍼런스가 아닌 실제 값이 들어가야 한다. 하지만 특정 프로토콜에 대한 배열은 각 element 별로 크기가 다를 수 있다.
-ex) `var drawables: [Drawable]`
-배열은 element들을 고정된 크기 안에 저장하기 때문에 문제가 생기는데 이런 경우를 위해서 Extential Container라는 특수한 storage layout을 사용한다.
-
-![Untitled](Images/Untitled%2033.png)
-
-- 컨테이너의 처음엔 valueBuffer 3개가 할당된다.
-
-![Untitled](Images/Untitled%2034.png)

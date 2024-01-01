@@ -141,40 +141,40 @@ Line의 경우 valueBuffer에 들어가지 않으므로 Heap 메모리 할당 �
 
 ## Copy on Write
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2022.png)
+![Untitled](Image/Untitled%2022.png)
 
 - Pair라는 구조체 내부에 Drawable 변수 두개가 선언되어 있다.
 - 하나는 Line, 하나는 Point를 할당한다.
 - pair 내부에는 existential container 두개가 저장되고 Line은 Heap 메모리까지 할당된다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2023.png)
+![Untitled](Image/Untitled%2023.png)
 
 - Line의 경우 크기가 커서 Heap 할당이 되므로 비용이 크다.
 - copy에 값을 대입하는 경우 Line은 구조체이기 때문에 Heap 메모리에 있는 내용이 복사가 된다. → 새로운 Heap메모리 할당이 계속 이루어짐 → 비용 상승
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2024.png)
+![Untitled](Image/Untitled%2024.png)
 
 - Line을 클래스로 만들면 이런 복사에 대한 비용을 줄일 수 있음.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2025.png)
+![Untitled](Image/Untitled%2025.png)
 
 - 하지만 위와 같이 의도치 않은 상태 공유가 될 수 있다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2026.png)
+![Untitled](Image/Untitled%2026.png)
 
 - 궁극적으론 값이 바뀌었을땐 위와 같이 동작해야 하는데 그것을 Copy on Write로 해결할 수 있음.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2027.png)
+![Untitled](Image/Untitled%2027.png)
 
 - Line에 대한 데이터를 가지고 있는 LineStorage 클래스를 선언함
 - Line은 LineStorage를 프로퍼티로 가지고 있음
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2028.png)
+![Untitled](Image/Untitled%2028.png)
 
 - Pair의 두 프로퍼티에 동일한 인스턴스를 대입해도, copy라는 변수에 pair를 대입해도 LineStorage는  클래스이기기 때문에 복사되지 않고 레퍼런스를 전달받는다.
 즉, 동일한 인스턴스를 가리킨다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2029.png)
+![Untitled](Image/Untitled%2029.png)
 
 - 다만, Line의 move() 함수를 통해 값을 변경하면 storage가 두 개 이상의 참조 카운트를 가지고 있으면, 값을 복사하도록 한다.
 → 값 변경이 다른 참조된 내용과 공유되지 않게 한다.
@@ -183,17 +183,17 @@ Line의 경우 valueBuffer에 들어가지 않으므로 Heap 메모리 할당 �
 
 ## 결론
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2030.png)
+![Untitled](Image/Untitled%2030.png)
 
 - existential container의 valueBuffer에 들어가는 작은 크기의 프로토콜 타입은 Heap메모리 할당이 없으며, 레퍼런스 카운팅도 없기 때문에 아주 빠르다.
 - 프로토콜 타입은 PWT를 사용한 Dynamic dispatch를 사용한다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2031.png)
+![Untitled](Image/Untitled%2031.png)
 
 - 반면, valueBuffer에 들어가지 않는 큰 크기의 프로토콜 타입은 Heap 할당이 생기며 비용이 크다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2032.png)
+![Untitled](Image/Untitled%2032.png)
 
 - 이런 큰 크기의 프로토콜 타입은 Indirect storage를 사용한 CoW 기법으로 할당에 대한 비용을 줄일 수 있다.
 
-![Untitled](Protocol%20Types%20d4346a3578b64f78a40a9963381eca01/Untitled%2033.png)
+![Untitled](Image/Untitled%2033.png)
